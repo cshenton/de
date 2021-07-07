@@ -43,25 +43,41 @@ int main()
         return 1;
     }
 
+    printf("\nOptimising %d dimensional Rosenbrock function\n\n", num_dims);
+
     // Run the optimiser for a number of steps
     for (int i = 0; i < num_evals; i++)
     {
+        // Request a new candidate for fitness evaluation
         int id = de_ask(opt, candidate);
 
-        // We want to minimise this
+        // Run the fitness eval and report it back to the optimiser
         float fitness = rosenbrock(num_dims, candidate);
         de_tell(opt, id, candidate, fitness);
 
-        // Querying the best fitness without the candidate is very cheap
+        // Query the current best fitness score
         float best_fitness = de_best(opt, NULL);
-        if (i % 1000 == 0)
+
+        // Every 100k evals, print the best fitness
+        if (i % 100000 == 0)
         {
-            printf("Best fitness: %.10e\n", best_fitness);
+            printf("Step %d fitness:\t\t%.10e\n", i, best_fitness);
         }
     }
 
-    // Now we're done, we also query the best candidate solution
+    // Now we're done, we also query the best candidate solution and print it out
     float best_fitness = de_best(opt, candidate);
+
+    printf("\nFound solution at:\n");
+    for (int i = 0; i < num_dims; i++)
+    {
+        if (i % 10 == 0)
+        {
+            printf("\n    ");
+        }
+        printf("%f, ", candidate[i]);
+    }
+    printf("\n\n");
 
     // Cleanup and return
     free(candidate);

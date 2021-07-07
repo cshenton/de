@@ -2,13 +2,13 @@
 
 Single file Apache 2.0 licensed implementation of the Adaptive Differential Evolution optimiser.
 
-Adaptive DE with radius limiting is among the start of the art in gradient-free optimisers. 
+Adaptive DE with radius limiting is among the state of the art in gradient-free optimisers. 
 Gradient-free optimisers are theoretically very portable (since they require no information
 from the problem other than fitness scores). However, I was not happy with the portability of
 existing DE implementations.
 
 Since this implementation is a single C99 header, it can be easily integrated with any existing
-build system which supports compiling C code.
+build system which supports compiling C code, and the API itself couldn't be simpler.
 
 ## Usage
 
@@ -27,7 +27,7 @@ To initialise the library, fill out a `de_settings` struct with your problem dim
 `de_init`. If a memory allocation fails, it will return a null pointer.
 
 ```c
-de_optimiser *opt = de_init((de_settings){
+de_optimiser *opt = de_init(&(de_settings){
     .dimension_count = 50,      // Number of dimensions in the optimisation problem
     .population_count = 100,    // Number of agents in the population
     .lower_bound = -2.0f,       // Lower bound of the search space (same in all dimensions)
