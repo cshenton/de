@@ -14,6 +14,15 @@
 #ifndef DIFFERENTIAL_EVOLUTION_H
 #define DIFFERENTIAL_EVOLUTION_H
 
+#if (!defined(DE_ALLOC) && defined(DE_FREE)) || (defined(DE_ALLOC) && !defined(DE_FREE)) 
+#error "Must define both or neither of DE_ALLOC and DE_FREE."
+#endif
+
+#ifndef DE_ALLOC
+#define DE_ALLOC(sz) malloc(sz)
+#define DE_FREE(p) free(p)
+#endif
+
 #include <stdint.h>
 
 typedef struct de_settings
@@ -106,19 +115,19 @@ de_optimiser *de_init(de_settings *settings)
     const int random_seed = settings->random_seed;
 
     // Allocate the optimiser and its memory pools
-    de_optimiser *opt = (de_optimiser *)malloc(sizeof(de_optimiser));
-    float *crossover_probs = (float *)malloc(sizeof(float) * population_count);
-    float *differential_weights = (float *)malloc(sizeof(float) * population_count);
-    float *fitnesses = (float *)malloc(sizeof(float) * population_count);
-    float *candidates = (float *)malloc(sizeof(float) * dimension_count * population_count);
+    de_optimiser *opt = (de_optimiser *)DE_ALLOC(sizeof(de_optimiser));
+    float *crossover_probs = (float *)DE_ALLOC(sizeof(float) * population_count);
+    float *differential_weights = (float *)DE_ALLOC(sizeof(float) * population_count);
+    float *fitnesses = (float *)DE_ALLOC(sizeof(float) * population_count);
+    float *candidates = (float *)DE_ALLOC(sizeof(float) * dimension_count * population_count);
 
     if (!opt || !crossover_probs || !differential_weights || !fitnesses || !candidates)
     {
-        free(opt);
-        free(crossover_probs);
-        free(differential_weights);
-        free(fitnesses);
-        free(candidates);
+        DE_FREE(opt);
+        DE_FREE(crossover_probs);
+        DE_FREE(differential_weights);
+        DE_FREE(fitnesses);
+        DE_FREE(candidates);
         return NULL;
     }
 
@@ -248,11 +257,11 @@ float de_best(de_optimiser *opt, float *out_candidate)
 
 void de_deinit(de_optimiser *opt)
 {
-    free(opt->crossover_probs);
-    free(opt->differential_weights);
-    free(opt->fitnesses);
-    free(opt->candidates);
-    free(opt);
+    DE_FREE(opt->crossover_probs);
+    DE_FREE(opt->differential_weights);
+    DE_FREE(opt->fitnesses);
+    DE_FREE(opt->candidates);
+    DE_FREE(opt);
 }
 
 #endif // DIFFERENTIAL_EVOLUTION_IMPL

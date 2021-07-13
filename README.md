@@ -67,3 +67,9 @@ de_deinit(opt);
 
 That's it! That's the entire library. See `example.c` for a complete example optimising the
 rosenbrock function.
+
+
+## Custom Allocators
+
+To use your own custom allocators, define `DE_ALLOC(dz)` and `DE_FREE(p)` _before_ including the 
+header. These default to using `malloc` and `free`.
