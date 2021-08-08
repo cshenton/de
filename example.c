@@ -4,7 +4,7 @@
 #include "de.h"
 
 // Rosenbrock function, reasonably tricky non-convex function in n dimensions.
-float rosenbrock(const int params_count, float *params)
+float rosenbrock(int params_count, float *params)
 {
     float delta = 0.0;
     float sum = 0.0;
@@ -34,7 +34,7 @@ int main()
     });
 
     // This is small enough to stack alloc, but we heap alloc for demonstration
-    float *candidate = (float *)malloc(sizeof(float) * num_dims);
+    float *candidate = malloc(sizeof(*candidate) * num_dims);
 
     // Early exit if de_init or candidate allocs failed
     if (!opt || !candidate)
